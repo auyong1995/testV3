@@ -1,15 +1,33 @@
 pipeline {
+    
+    environment {
+    registry = "auyong/firstrepo:1.0"
+    registryCredential = 'dockerhub_id'
+    dockerImage = ''
+    }
+
     agent any
 
     stages {
         stage('checkout') {
             steps {
                 echo 'Hello World'
+                checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/auyong1995/testV3.git']]])
             }
         }
-        stage('Install') {
+        stage('Building our image') {
             steps {
-                sh 'npm install'
+                script {
+                    dockerImage = docker.build registry + ":1"
+                }
+            }
+        }
+        stage('Deploy our image') {
+            steps {
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                    dockerImage.push()
+                }
             }
         }
     }
