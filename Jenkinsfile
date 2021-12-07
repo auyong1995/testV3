@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('checkout') {
             steps {
-                echo 'Hello World'
+                echo 'Hello World v2'
                 checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/auyong1995/testV3.git']]])
             }
         }
